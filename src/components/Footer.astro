@@ -1,0 +1,57 @@
+---
+import { NAV, SITE } from '../site.config';
+import Marca from './Marca.astro';
+const ano = new Date().getFullYear();
+---
+
+<footer class="rodape">
+  <div class="container">
+    <div class="rodape__grade">
+      <div class="rodape__marca">
+        <Marca tamanho="grande" />
+        <p>{SITE.advogada}<br />{SITE.oab}</p>
+      </div>
+      <div>
+        <p class="rodape__titulo">Contato</p>
+        <ul>
+          <li><a href={SITE.whatsapp} target="_blank" rel="noopener">WhatsApp {SITE.telefone}</a></li>
+          <li><a href={`tel:${SITE.telefoneE164}`}>Telefone {SITE.telefone}</a></li>
+          {SITE.email && <li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>}
+          <li>{SITE.horario}</li>
+        </ul>
+      </div>
+      <div>
+        <p class="rodape__titulo">Atendimento</p>
+        <p class="rodape__cidades">{SITE.regiao.join(', ')} – {SITE.uf}</p>
+      </div>
+      <div>
+        <p class="rodape__titulo">Site</p>
+        <ul class="rodape__links">
+          {NAV.map((i) => <li><a href={i.href}>{i.label}</a></li>)}
+          <li><a href="/privacidade/">Privacidade</a></li>
+          <li><a href="/aviso-legal/">Aviso legal</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="rodape__base">
+      © {ano} {SITE.escritorio}. Conteúdo de caráter exclusivamente informativo, conforme o
+      Código de Ética e Disciplina da OAB e o Provimento 205/2021.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .rodape { background: #0f0f11; color: var(--mudo-escuro); font-size: 0.9rem; padding: 4.5rem 0 2rem; }
+  .rodape a { color: #d8d4dc; text-decoration: none; }
+  .rodape a:hover { color: var(--ouro); }
+  .rodape__grade { display: grid; gap: 2.5rem; }
+  @media (min-width: 640px) { .rodape__grade { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 980px) { .rodape__grade { grid-template-columns: 1.6fr 1.2fr 1fr 1fr; } }
+  .rodape__marca p { margin-top: 1.5rem; line-height: 1.6; }
+  .rodape__titulo { font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ouro); margin-bottom: 1rem; }
+  .rodape ul { list-style: none; padding: 0; margin: 0; }
+  .rodape li { margin-bottom: 0.45rem; }
+  .rodape__cidades { line-height: 1.7; margin: 0; max-width: 18rem; }
+  @media (max-width: 639px) { .rodape__links { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1rem; } }
+  .rodape__base { border-top: 1px solid var(--linha-escura); margin: 3.5rem 0 0; padding-top: 1.5rem; font-size: 0.78rem; color: #78757c; }
+</style>

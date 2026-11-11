@@ -1,0 +1,64 @@
+---
+import { Image } from 'astro:assets';
+import Cabeca from '../components/Cabeca.astro';
+import Base from '../layouts/Base.astro';
+import Chamada from '../components/Chamada.astro';
+import { SITE } from '../site.config';
+import foto from '../assets/advogada-trabalho.jpg';
+---
+
+<Base titulo="Sobre a advogada" descricao={`${SITE.advogada}, ${SITE.oab}. Atuação em Direito Previdenciário e Direito Civil em Maringá e região.`}>
+  <Cabeca rotulo={`Advogada · ${SITE.oab}`} titulo={SITE.advogada} resumo="Direito Previdenciário e Direito Civil, com atendimento pessoal em Maringá e região." trilha={[{ label: 'Sobre' }]} />
+
+  <section class="secao">
+    <div class="container sobre">
+      <div class="sobre__foto">
+        <Image src={foto} alt={`${SITE.advogada} em atendimento`} width={700} widths={[400, 700]} sizes="(min-width: 900px) 400px, 90vw" />
+      </div>
+      <div class="prosa">
+        <p class="rotulo">Trajetória</p>
+        <!-- TODO: completar com instituição de formação e pós-graduação, se houver. -->
+        <p class="sobre__abre">
+          Bacharel em Direito, com mais de seis anos de experiência na advocacia.
+        </p>
+        <p>
+          Atua em Direito Previdenciário e Direito Civil, com trajetória profissional em Belém
+          (PA) e São José do Rio Preto (SP) e, hoje, atende em Maringá e região.
+        </p>
+
+        <dl class="sobre__fatos">
+          <div><dt>Experiência</dt><dd>Mais de 6 anos</dd></div>
+          <div><dt>Inscrição</dt><dd>{SITE.oab}</dd></div>
+          <div><dt>Trajetória</dt><dd>Belém · São José do Rio Preto · Maringá</dd></div>
+        </dl>
+
+        <h2>Como é o atendimento</h2>
+        <p>
+          O atendimento é individual e com hora marcada. As reuniões acontecem em sala de
+          reunião em Maringá, por videochamada ou no local de preferência do cliente na região,
+          o que facilita para quem tem dificuldade de deslocamento.
+        </p>
+        <p>
+          Cada caso começa com uma conversa para entender a situação e analisar os documentos.
+          A partir daí, explico com clareza as alternativas, os prazos envolvidos e os próximos
+          passos, para que a decisão seja tomada com segurança.
+        </p>
+      </div>
+    </div>
+  </section>
+  <Chamada />
+</Base>
+
+<style>
+  .sobre { display: grid; gap: 3.5rem; }
+  @media (min-width: 900px) { .sobre { grid-template-columns: 400px 1fr; gap: 6rem; align-items: start; } }
+  .sobre__foto { position: relative; width: calc(100% - 1.5rem); }
+  .sobre__foto::after { content: ''; position: absolute; inset: 1.5rem -1.5rem -1.5rem 1.5rem; border: 1px solid var(--ouro); z-index: -1; }
+  .sobre__foto :global(img) { width: 100%; height: auto; display: block; }
+  @media (min-width: 900px) { .sobre__foto { position: sticky; top: 7rem; width: auto; } }
+  .sobre__abre { font-family: var(--serif); font-size: clamp(1.5rem, 2.4vw, 1.9rem); line-height: 1.3; color: var(--tinta); }
+  .sobre__fatos { margin: 2.5rem 0 1rem; display: grid; gap: 1.2rem; border-top: 1px solid var(--tinta); padding-top: 1.5rem; }
+  @media (min-width: 640px) { .sobre__fatos { grid-template-columns: repeat(3, 1fr); gap: 2rem; } }
+  .sobre__fatos dt { font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ouro-texto); margin-bottom: 0.35rem; }
+  .sobre__fatos dd { margin: 0; color: var(--tinta); }
+</style>

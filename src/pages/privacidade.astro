@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import Cabeca from '../components/Cabeca.astro';
+import { SITE } from '../site.config';
+---
+
+<Base titulo="Política de privacidade" descricao="Como este site trata dados pessoais, conforme a Lei Geral de Proteção de Dados (LGPD).">
+  <Cabeca rotulo="LGPD" titulo="Política de privacidade" resumo="Como este site trata dados pessoais, conforme a Lei Geral de Proteção de Dados." trilha={[{ label: 'Privacidade' }]} />
+
+  <section class="secao">
+    <div class="container prosa">
+      <p>
+        Esta política explica como o site de {SITE.escritorio} trata dados pessoais, nos termos
+        da Lei nº 13.709/2018 (Lei Geral de Proteção de Dados Pessoais – LGPD).
+      </p>
+
+      <h2>Quais dados são coletados</h2>
+      <p>
+        O site não possui formulários de cadastro e não coleta dados pessoais diretamente.
+        Quando você entra em contato pelo WhatsApp ou telefone, os dados que você decide
+        compartilhar (como nome, telefone e informações do seu caso) são usados apenas para
+        responder ao contato e, se for o caso, para a prestação dos serviços jurídicos.
+      </p>
+
+      <h2>Sigilo profissional</h2>
+      <p>
+        As informações compartilhadas em consulta são protegidas pelo sigilo profissional
+        previsto no Estatuto da Advocacia (Lei nº 8.906/1994) e no Código de Ética e
+        Disciplina da OAB.
+      </p>
+
+      <h2>Cookies e serviços de terceiros</h2>
+      <p>
+        O site não utiliza cookies de rastreamento ou publicidade. As fontes tipográficas são
+        carregadas a partir do Google Fonts, o que pode envolver o registro técnico do seu
+        endereço IP por esse serviço.
+      </p>
+
+      <h2>Seus direitos</h2>
+      <p>
+        Você pode solicitar a confirmação, o acesso, a correção ou a eliminação de seus dados
+        pessoais a qualquer momento, pelo telefone ou WhatsApp {SITE.telefone}.
+      </p>
+
+      <p class="aviso">Última atualização: novembro de 2026.</p>
+    </div>
+  </section>
+</Base>

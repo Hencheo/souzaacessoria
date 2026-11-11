@@ -1,0 +1,120 @@
+---
+import { getCollection, render } from 'astro:content';
+import Cabeca from '../../components/Cabeca.astro';
+import WhatsIcon from '../../components/WhatsIcon.astro';
+import Base from '../../layouts/Base.astro';
+import Chamada from '../../components/Chamada.astro';
+import { AREAS, SITE } from '../../site.config';
+
+export async function getStaticPaths() {
+  const itens = await getCollection('areas');
+  return itens.map((entry) => ({ params: { area: entry.data.area, slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const info = AREAS[entry.data.area];
+const url = `${SITE.url}${info.rota}${entry.id}/`;
+
+const relacionados = (await getCollection('areas', ({ data, id }) => data.area === entry.data.area && id !== entry.id))
+  .sort((a, b) => a.data.ordem - b.data.ordem);
+
+const jsonld: object[] = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: SITE.url + '/' },
+      { '@type': 'ListItem', position: 2, name: info.titulo, item: SITE.url + info.rota },
+      { '@type': 'ListItem', position: 3, name: entry.data.titulo, item: url },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: entry.data.titulo,
+    description: entry.data.resumo,
+    serviceType: info.titulo,
+    provider: { '@id': `${SITE.url}/#escritorio` },
+    areaServed: SITE.regiao.map((c) => `${c} - ${SITE.uf}`),
+  },
+];
+if (entry.data.faq.length) {
+  jsonld.push({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: entry.data.faq.map((f) => ({
+      '@type': 'Question',
+      name: f.pergunta,
+      acceptedAnswer: { '@type': 'Answer', text: f.resposta },
+    })),
+  });
+}
+---
+
+<Base titulo={`${entry.data.titulo} em Maringá`} descricao={entry.data.resumo} jsonld={jsonld}>
+  <Cabeca
+    rotulo={info.titulo}
+    titulo={entry.data.titulo}
+    resumo={entry.data.resumo}
+    trilha={[{ label: info.titulo, href: info.rota }, { label: entry.data.titulo }]}
+  />
+
+  <article class="secao">
+    <div class="container pagina">
+      <div class="prosa">
+        <Content />
+
+        {entry.data.faq.length > 0 && (
+          <section class="pagina__faq">
+            <h2>Perguntas frequentes</h2>
+            {entry.data.faq.map((f) => (
+              <details class="faq">
+                <summary>{f.pergunta}</summary>
+                <p>{f.resposta}</p>
+              </details>
+            ))}
+          </section>
+        )}
+
+        <p class="aviso">
+          Este conteúdo tem caráter informativo e não substitui a análise individual do caso.
+          Requisitos e regras podem mudar; cada situação depende dos documentos e do histórico
+          de quem busca o direito.
+        </p>
+      </div>
+
+      <aside class="lateral">
+        <div class="lateral__caixa">
+          <p class="rotulo">Atendimento</p>
+          <p class="lateral__titulo">Quer entender o seu caso?</p>
+          <p>Conte em poucas linhas o que aconteceu e combinamos uma conversa.</p>
+          <a class="botao botao--ouro" href={SITE.whatsapp} target="_blank" rel="noopener"><WhatsIcon /> Agendar</a>
+        </div>
+        <p class="rotulo">Também em {info.titulo.replace('Direito ', '')}</p>
+        <ul>
+          {relacionados.map((r) => <li><a href={`${info.rota}${r.id}/`}>{r.data.titulo}</a></li>)}
+        </ul>
+      </aside>
+    </div>
+  </article>
+
+  <Chamada />
+</Base>
+
+<style>
+  .pagina { display: grid; gap: 3.5rem; }
+  @media (min-width: 1000px) { .pagina { grid-template-columns: minmax(0, 1fr) 18rem; gap: 6rem; } }
+  .prosa > :global(h2:first-child), .prosa > :global(p:first-child) { margin-top: 0; }
+  .pagina__faq { margin-top: 3rem; }
+  .lateral ul { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--tinta); }
+  .lateral li { border-bottom: 1px solid var(--linha); }
+  .lateral li a { display: block; padding: 0.8rem 0; text-decoration: none; font-family: var(--serif); font-size: 1.05rem; transition: color 0.3s, transform 0.4s var(--ease); }
+  .lateral li a:hover { color: var(--ouro-texto); transform: translateX(4px); }
+  .lateral__caixa { background: var(--noite); color: var(--mudo-escuro); padding: 1.6rem; margin-bottom: 2.5rem; }
+  .lateral__caixa .rotulo { color: var(--ouro); margin-bottom: 0.9rem; }
+  .lateral__titulo { font-family: var(--serif); font-size: 1.35rem; line-height: 1.25; color: var(--papel); margin-bottom: 0.6rem; }
+  .lateral__caixa p:not(.rotulo):not(.lateral__titulo) { font-size: 0.92rem; margin-bottom: 1.3rem; }
+  .lateral__caixa .botao { padding: 0.8rem 1.3rem; font-size: 0.9rem; }
+  @media (min-width: 1000px) { .lateral { position: sticky; top: 7rem; align-self: start; } }
+</style>

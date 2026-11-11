@@ -1,0 +1,454 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Chamada from '../components/Chamada.astro';
+import WhatsIcon from '../components/WhatsIcon.astro';
+import { SITE } from '../site.config';
+import foto from '../assets/advogada.jpg';
+import fotoTrabalho from '../assets/advogada-trabalho.jpg';
+
+const posts = (await getCollection('blog', ({ data }) => !data.rascunho))
+  .sort((a, b) => b.data.data.valueOf() - a.data.data.valueOf())
+  .slice(0, 3);
+
+// Índice editorial por situação do cliente.
+const indice = [
+  {
+    area: 'Direito Previdenciário',
+    rota: '/previdenciario/',
+    itens: [
+      { t: 'O INSS negou ou cortou meu benefício', d: 'Recurso, revisão e via judicial', href: '/previdenciario/revisao-de-beneficios/' },
+      { t: 'Quero saber se já posso me aposentar', d: 'Idade, regras de transição e especial', href: '/previdenciario/aposentadoria/' },
+      { t: 'Estou afastado por doença ou acidente', d: 'Auxílio e aposentadoria por incapacidade', href: '/previdenciario/auxilio-por-incapacidade/' },
+      { t: 'Pessoa idosa ou com deficiência e baixa renda', d: 'BPC/LOAS', href: '/previdenciario/bpc-loas/' },
+      { t: 'Perdi um familiar que contribuía', d: 'Pensão por morte', href: '/previdenciario/pensao-por-morte/' },
+    ],
+  },
+  {
+    area: 'Direito Civil',
+    rota: '/civel/',
+    itens: [
+      { t: 'Tenho um problema com compra ou serviço', d: 'Direito do consumidor', href: '/civel/direito-do-consumidor/' },
+      { t: 'Preciso de um contrato ou cobrar uma dívida', d: 'Contratos e cobranças', href: '/civel/contratos-e-cobrancas/' },
+      { t: 'Sofri um prejuízo causado por outra pessoa', d: 'Danos materiais e morais', href: '/civel/indenizacoes/' },
+      { t: 'Tenho uma questão de aluguel', d: 'Locação e despejo', href: '/civel/locacao-e-despejo/' },
+      { t: 'Há um inventário ou testamento na família', d: 'Inventário e sucessões', href: '/civel/inventario-e-testamento/' },
+    ],
+  },
+];
+
+const faq = [
+  { p: 'O INSS negou meu pedido. Ainda é possível fazer algo?', r: 'Em muitos casos, sim. A decisão pode ser contestada por recurso administrativo, em regra em até 30 dias da ciência, ou pela via judicial. O caminho adequado depende do motivo do indeferimento e dos documentos disponíveis.' },
+  { p: 'Como funciona o atendimento com hora marcada?', r: 'Você envia uma mensagem pelo WhatsApp e combinamos dia, horário e formato: sala de reunião em Maringá, videochamada ou no local de sua preferência na região.' },
+  { p: 'Quais documentos levar na primeira conversa?', r: 'Documento com foto e CPF. Para assuntos do INSS, o extrato do CNIS (disponível no Meu INSS), carteira de trabalho, cartas do INSS e laudos médicos, se houver. Para assuntos cíveis, contratos, comprovantes e mensagens relacionadas ao caso.' },
+  { p: 'Quais cidades são atendidas?', r: `Maringá e cidades da região, como ${SITE.regiao.slice(1).join(', ')}.` },
+  { p: 'Como confirmo que estou falando com a advogada?', r: `A inscrição ${SITE.oab} pode ser consultada no Cadastro Nacional dos Advogados (cna.oab.org.br). O único WhatsApp de atendimento é ${SITE.telefone}. Desconfie de mensagens que peçam pagamento para liberar valores de processo.` },
+];
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.p, acceptedAnswer: { '@type': 'Answer', text: f.r } })),
+};
+let n = 0;
+---
+
+<Base titulo={`Advogada em Maringá: Previdenciário e Cível | ${SITE.escritorio}`} jsonld={[faqLd]}>
+  <!-- ABERTURA: retrato ao centro, texto nas laterais -->
+  <section class="abertura escuro">
+    <div class="abertura__grade-linhas" aria-hidden="true"></div>
+    <div class="container abertura__palco">
+      <figure class="abertura__foto">
+        <Image src={foto} alt={`${SITE.advogada}, advogada em Maringá`} width={1100} widths={[540, 820, 1100]} sizes="(min-width: 980px) 46vw, 100vw" loading="eager" fetchpriority="high" />
+      </figure>
+
+      <div class="abertura__esq">
+        <p class="rotulo">Advocacia · Maringá e região</p>
+        <h1>Advogada em Maringá para questões do <em>INSS</em> e de Direito Civil</h1>
+        <div class="abertura__acoes">
+          <a class="botao botao--ouro" href={SITE.whatsapp} target="_blank" rel="noopener"><WhatsIcon /> Agendar atendimento</a>
+          <a class="seta" href="/sobre/">Conheça a Dra. Vitoria</a>
+        </div>
+      </div>
+
+      <div class="abertura__dir">
+        <blockquote class="abertura__frase">
+          <p>“Cada caso começa por uma conversa: entender a sua situação, explicar os caminhos possíveis e decidir com segurança.”</p>
+          <footer>
+            <span class="assinatura">{SITE.advogada.replace('Dra. ', '')}</span>
+            <span>Advogada · <span class="nowrap">{SITE.oab}</span></span>
+          </footer>
+        </blockquote>
+        <p class="abertura__intro">
+          Orientação clara sobre aposentadorias, BPC/LOAS, benefícios por incapacidade e
+          revisões, além de contratos, indenizações e inventários. Atendimento pessoal, com
+          hora marcada.
+        </p>
+      </div>
+    </div>
+
+    <div class="container">
+      <dl class="fatos">
+        <div><dt>Experiência</dt><dd>Mais de 6 anos na advocacia</dd></div>
+        <div><dt>Atuação</dt><dd>Previdenciário e Cível</dd></div>
+        <div><dt>Atendimento</dt><dd>Hora marcada, presencial ou on-line</dd></div>
+        <div><dt>Região</dt><dd>Maringá e cidades vizinhas</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- I. ÍNDICE -->
+  <section class="secao" id="areas">
+    <div class="container indice">
+      <div class="indice__cab">
+        <p class="rotulo">Áreas de atuação</p>
+        <h2>Qual é a sua <em>situação</em>?</h2>
+        <p class="lead">Escolha o que mais se aproxima do seu caso para entender seus direitos e os próximos passos.</p>
+      </div>
+
+      <div class="indice__listas">
+        {indice.map((g) => (
+          <div class="grupo revelar">
+            <div class="grupo__cab">
+              <h3>{g.area}</h3>
+              <a class="seta" href={g.rota}>Ver tudo</a>
+            </div>
+            <ol class="linhas">
+              {g.itens.map((i) => {
+                n += 1;
+                return (
+                  <li>
+                    <a class="linha" href={i.href}>
+                      <span class="linha__n">{String(n).padStart(2, '0')}</span>
+                      <span class="linha__t">{i.t}</span>
+                      <span class="linha__d">{i.d}</span>
+                      <span class="linha__seta" aria-hidden="true">→</span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+
+  <!-- II. A ADVOGADA -->
+  <section class="secao">
+    <div class="container advogada">
+      <div class="advogada__foto revelar">
+        <Image src={fotoTrabalho} alt={`${SITE.advogada} em atendimento`} width={760} widths={[420, 760]} sizes="(min-width: 980px) 440px, 90vw" />
+      </div>
+      <div class="advogada__texto">
+        <p class="rotulo">Quem vai cuidar do seu caso</p>
+        <h2>Atendimento <em>pessoal</em>, do primeiro contato ao fim do caso</h2>
+        <p>
+          A {SITE.advogada} é bacharel em Direito, com mais de seis anos de experiência na
+          advocacia e trajetória profissional em Belém (PA) e São José do Rio Preto (SP).
+          Hoje atende em Maringá e região, nas áreas de Direito Previdenciário e Direito Civil.
+        </p>
+        <p>
+          Você conversa diretamente com a advogada responsável, recebe explicações em
+          linguagem simples e acompanha cada etapa do seu pedido ou processo.
+        </p>
+        <a class="seta" href="/sobre/">Conheça a trajetória</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- III. COMO COMEÇA -->
+  <section class="secao secao--noite">
+    <div class="container">
+      <p class="rotulo">Como começa</p>
+      <h2 class="passos__titulo">Três passos até a <em>primeira conversa</em></h2>
+      <ol class="passos">
+        <li class="revelar">
+          <span class="passos__n">i.</span>
+          <h3>Você envia uma mensagem</h3>
+          <p>Conte em poucas linhas o que aconteceu. Combinamos dia, horário e formato da conversa.</p>
+        </li>
+        <li class="revelar">
+          <span class="passos__n">ii.</span>
+          <h3>Conversamos sobre o caso</h3>
+          <p>Ouço sua situação com calma, analiso os documentos e explico quais caminhos existem.</p>
+        </li>
+        <li class="revelar">
+          <span class="passos__n">iii.</span>
+          <h3>Você decide com segurança</h3>
+          <p>Se seguirmos juntos, você acompanha cada etapa, sem linguagem complicada.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- IV. FAQ -->
+  <section class="secao">
+    <div class="container faq-home">
+      <div>
+        <p class="rotulo">Dúvidas frequentes</p>
+        <h2>Antes de <em>agendar</em></h2>
+        <p class="lead">Não encontrou sua dúvida? Envie uma mensagem.</p>
+      </div>
+      <div class="revelar">
+        {faq.map((f) => (
+          <details class="faq">
+            <summary>{f.p}</summary>
+            <p>{f.r}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {posts.length > 0 && (
+    <section class="secao secao--marfim">
+      <div class="container">
+        <p class="rotulo">Artigos</p>
+        <h2>Entenda seus <em>direitos</em></h2>
+        <div class="artigos">
+          {posts.map((p) => (
+            <a class="artigo" href={`/blog/${p.id}/`}>
+              <h3>{p.data.titulo}</h3>
+              <p>{p.data.descricao}</p>
+              <span class="seta">Ler artigo</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <Chamada />
+</Base>
+
+<style>
+  /* ABERTURA */
+  .abertura {
+    position: relative;
+    background:
+      radial-gradient(ellipse 40% 75% at 50% 45%, #2f2c33 0%, rgba(47, 44, 51, 0.5) 45%, rgba(21, 21, 23, 0) 78%),
+      var(--noite);
+    color: var(--mudo-escuro);
+    overflow: hidden;
+  }
+  /* linhas verticais finas, como uma grade de diagramação */
+  .abertura__grade-linhas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: calc(100% / 6) 100%;
+    background-position: center;
+  }
+  .abertura__palco { position: relative; display: grid; gap: 1.5rem; padding-top: 1rem; }
+  .abertura h1 { color: var(--papel); }
+  .abertura h1 em { color: var(--ouro); }
+  .abertura__acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 1.6rem; margin-top: 2.2rem; }
+  .abertura__acoes .seta { color: var(--papel); }
+
+  .abertura__foto { margin: 0; justify-self: center; width: min(100%, 460px); }
+  .abertura__foto :global(img) {
+    width: 100%;
+    height: auto;
+    -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 98%), linear-gradient(to right, transparent 0%, #000 18%, #000 82%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to bottom, #000 62%, transparent 98%), linear-gradient(to right, transparent 0%, #000 18%, #000 82%, transparent 100%);
+    mask-composite: intersect;
+  }
+
+  .abertura__frase { margin: 0; }
+  .abertura__frase p { font-family: var(--serif); font-size: 1.45rem; line-height: 1.3; color: var(--papel); margin: 0 0 1.2rem; }
+  .abertura__frase footer { display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; }
+  .assinatura { font-family: var(--serif); font-style: normal; font-size: 1.2rem; letter-spacing: 0; text-transform: none; color: var(--ouro); }
+  .abertura__intro { font-size: 0.95rem; line-height: 1.7; margin: 2rem 0 0; padding-top: 1.4rem; border-top: 1px solid var(--linha-escura); }
+  .nowrap { white-space: nowrap; }
+
+  /* celular: retrato de capa, título sobre a base da foto */
+  @media (max-width: 979px) {
+    .abertura__grade-linhas { display: none; }
+    .abertura__palco { padding-top: 0; gap: 0; }
+    .abertura__foto {
+      order: -1;
+      width: auto;
+      margin: 0 calc(-1 * var(--gutter));
+      height: min(68svh, 560px);
+      overflow: hidden;
+    }
+    .abertura__foto :global(img) {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 12%;
+      -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+      mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+    }
+    .abertura__esq { position: relative; z-index: 1; margin-top: -7.5rem; }
+    .abertura h1 { font-size: clamp(2rem, 8.6vw, 2.6rem); text-shadow: 0 2px 24px rgba(21, 21, 23, 0.8); }
+    .abertura__acoes { margin-top: 1.6rem; gap: 1.2rem 1.6rem; }
+    .abertura__dir { margin: 3rem 0 2.2rem; padding-top: 2rem; border-top: 1px solid var(--linha-escura); }
+    .abertura__frase p { font-size: 1.15rem; line-height: 1.45; }
+    .abertura__intro { display: none; }
+  }
+
+  /* desktop: retrato no centro, texto nas laterais */
+  @media (min-width: 980px) {
+    .abertura__palco {
+      grid-template-columns: 1fr minmax(0, 1.25fr) 1fr;
+      grid-template-rows: minmax(0, 1fr);
+      align-items: stretch;
+      height: clamp(560px, calc(100vh - 4.75rem - 6.5rem), 860px);
+      margin-bottom: 1.5rem;
+      padding-top: 0;
+      gap: 0;
+    }
+    .abertura__foto {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      justify-self: center;
+      align-self: end;
+      width: auto;
+      max-width: none;
+      height: 100%;
+      min-height: 0;
+      margin: 0;
+      overflow: hidden;
+    }
+    .abertura__foto :global(img) {
+      height: 100%;
+      width: auto;
+      max-height: 100%;
+      object-fit: cover;
+      -webkit-mask-image: radial-gradient(ellipse 48% 60% at 50% 42%, #000 50%, transparent 100%), linear-gradient(to bottom, #000 70%, transparent 98%);
+      mask-image: radial-gradient(ellipse 48% 60% at 50% 42%, #000 50%, transparent 100%), linear-gradient(to bottom, #000 70%, transparent 98%);
+    }
+    .abertura__esq {
+      grid-column: 1 / 3;
+      grid-row: 1;
+      align-self: center;
+      position: relative;
+      z-index: 1;
+      max-width: 28rem;
+    }
+    .abertura__acoes .botao, .abertura__acoes .seta { white-space: nowrap; }
+    .abertura h1 { font-size: clamp(2.2rem, 3vw, 3.1rem); text-shadow: 0 2px 30px rgba(21, 21, 23, 0.6); }
+    .abertura__dir {
+      grid-column: 3;
+      grid-row: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-self: center;
+      padding: 0 0 0 2.5rem;
+      position: relative;
+      z-index: 1;
+    }
+    .abertura__frase p { font-size: clamp(1.1rem, 1.35vw, 1.3rem); line-height: 1.45; }
+  }
+
+  .fatos {
+    margin: 0;
+    padding: 1.8rem 0 2.4rem;
+    border-top: 1px solid var(--linha-escura);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.4rem 2rem;
+  }
+  @media (min-width: 860px) { .fatos { grid-template-columns: repeat(4, 1fr); } }
+  .fatos dt { font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ouro); margin-bottom: 0.35rem; }
+  .fatos dd { margin: 0; color: var(--papel); font-size: 0.98rem; }
+
+  /* I. ÍNDICE */
+  .indice { display: grid; gap: 3rem; }
+  @media (min-width: 980px) {
+    .indice { grid-template-columns: 0.85fr 1.6fr; gap: 5rem; }
+    .indice__cab { position: sticky; top: 7rem; align-self: start; }
+  }
+  .grupo + .grupo { margin-top: 3.5rem; }
+  .grupo__cab { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-bottom: 0.4rem; }
+  .grupo__cab h3 { margin: 0; font-size: 1.1rem; font-family: var(--sans); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ouro-texto); }
+  .grupo__cab .seta { font-size: 0.85rem; color: var(--mudo); }
+  @media (max-width: 640px) {
+    .grupo__cab h3 { font-size: 0.85rem; }
+    .grupo__cab .seta { white-space: nowrap; }
+    .linha { grid-template-columns: 2rem 1fr 1.2rem; column-gap: 0.8rem; padding: 1.15rem 0; }
+  }
+  .linhas { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--tinta); }
+  .linha {
+    display: grid;
+    grid-template-columns: 2.6rem 1fr 1.5rem;
+    grid-template-areas: 'n t s' 'n d s';
+    column-gap: 1rem;
+    align-items: center;
+    padding: 1.35rem 0;
+    border-bottom: 1px solid var(--linha);
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+  }
+  .linha::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    height: 1px;
+    width: 100%;
+    background: var(--ouro-texto);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.6s var(--ease);
+  }
+  .linha:hover::before { transform: scaleX(1); }
+  .linha__n { grid-area: n; font-family: var(--serif); font-style: normal; font-size: 1.1rem; color: var(--ouro-texto); align-self: start; padding-top: 0.25rem; }
+  .linha__t { grid-area: t; font-family: var(--serif); font-size: clamp(1.2rem, 1.9vw, 1.45rem); line-height: 1.3; color: var(--tinta); transition: transform 0.5s var(--ease); }
+  .linha__d { grid-area: d; font-size: 0.88rem; color: var(--mudo); margin-top: 0.2rem; }
+  .linha__seta { grid-area: s; color: var(--ouro-texto); font-size: 1.2rem; transition: transform 0.5s var(--ease); }
+  .linha:hover .linha__t { transform: translateX(6px); color: var(--tinta); }
+  .linha:hover .linha__seta { transform: translateX(4px); }
+
+  /* PRINCÍPIO */
+  .principio { padding: clamp(4rem, 10vw, 8rem) 0; }
+  .principio blockquote { margin: 0 auto; max-width: 54rem; text-align: center; }
+  .principio blockquote p { font-family: var(--serif); font-size: clamp(1.8rem, 4vw, 3.1rem); line-height: 1.2; color: var(--tinta); margin-bottom: 1.6rem; }
+  .principio blockquote em { color: var(--ouro-texto); }
+  .principio footer { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mudo); }
+
+  /* II. ADVOGADA */
+  .advogada { display: grid; gap: 3rem; align-items: center; }
+  @media (min-width: 980px) { .advogada { grid-template-columns: 440px 1fr; gap: 6rem; } }
+  .advogada__foto { position: relative; }
+  .advogada__foto::after {
+    content: '';
+    position: absolute;
+    inset: 1.5rem -1.5rem -1.5rem 1.5rem;
+    border: 1px solid var(--ouro);
+    z-index: -1;
+  }
+  .advogada__foto :global(img) { width: 100%; filter: saturate(0.9) contrast(1.02); }
+  @media (max-width: 979px) { .advogada__foto { width: calc(100% - 1.5rem); } }
+  .advogada__texto p { max-width: 36rem; }
+  .advogada__texto .seta { margin-top: 0.6rem; color: var(--tinta); }
+
+  /* III. PASSOS */
+  .passos__titulo { max-width: 16ch; margin-bottom: 3.5rem; }
+  .passos { list-style: none; margin: 0; padding: 0; display: grid; gap: 2.5rem; }
+  @media (min-width: 860px) { .passos { grid-template-columns: repeat(3, 1fr); gap: 3.5rem; } }
+  .passos li { border-top: 1px solid var(--linha-escura); padding-top: 1.6rem; }
+  .passos__n { font-family: var(--serif); font-style: normal; font-size: 3rem; line-height: 1; color: var(--ouro); display: block; margin-bottom: 1.4rem; }
+  .passos h3 { color: var(--papel); }
+  .passos p { margin: 0; }
+
+  /* IV. FAQ */
+  .faq-home { display: grid; gap: 2.5rem; }
+  @media (min-width: 980px) { .faq-home { grid-template-columns: 0.85fr 1.6fr; gap: 5rem; } }
+
+  /* ARTIGOS */
+  .artigos { display: grid; gap: 0; border-top: 1px solid var(--tinta); margin-top: 2.5rem; }
+  @media (min-width: 860px) { .artigos { grid-template-columns: repeat(3, 1fr); } }
+  .artigo { padding: 2rem 2rem 2rem 0; text-decoration: none; color: inherit; border-bottom: 1px solid var(--linha); }
+  .artigo h3 { transition: color 0.3s; }
+  .artigo:hover h3 { color: var(--ouro-texto); }
+  .artigo p { color: var(--mudo); font-size: 0.95rem; }
+</style>

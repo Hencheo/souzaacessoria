@@ -1,0 +1,62 @@
+---
+// Cabeçalho escuro das páginas internas: trilha, rótulo, título e resumo.
+interface Props {
+  rotulo?: string;
+  titulo: string;
+  resumo?: string;
+  trilha?: { label: string; href?: string }[];
+}
+const { rotulo, titulo, resumo, trilha = [] } = Astro.props;
+---
+
+<header class="cabeca">
+  <div class="cabeca__linhas" aria-hidden="true"></div>
+  <div class="container cabeca__grade">
+    <div>
+      {trilha.length > 0 && (
+        <nav class="migalhas" aria-label="Você está em">
+          <a href="/">Início</a>
+          {trilha.map((t) => (
+            <>
+              <span>/</span>
+              {t.href ? <a href={t.href}>{t.label}</a> : <span class="migalhas__atual">{t.label}</span>}
+            </>
+          ))}
+        </nav>
+      )}
+      {rotulo && <p class="rotulo">{rotulo}</p>}
+      <h1 set:html={titulo} />
+      {resumo && <p class="lead">{resumo}</p>}
+      <slot />
+    </div>
+    <slot name="lado" />
+  </div>
+</header>
+
+<style>
+  .cabeca {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 55% 110% at 88% 0%, #2f2c33, rgba(21, 21, 23, 0) 70%),
+      var(--noite);
+    color: var(--mudo-escuro);
+    padding: clamp(2.5rem, 6vw, 4.5rem) 0 clamp(3rem, 7vw, 5.5rem);
+  }
+  .cabeca__linhas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+    background-size: calc(100% / 6) 100%;
+    background-position: center;
+  }
+  @media (max-width: 979px) { .cabeca__linhas { display: none; } }
+  .cabeca__grade { position: relative; display: grid; gap: 2.5rem; align-items: end; }
+  @media (min-width: 980px) { .cabeca__grade:has(> :nth-child(2)) { grid-template-columns: 1.5fr 1fr; gap: 5rem; } }
+  .cabeca .migalhas { margin-bottom: 2.2rem; }
+  .migalhas__atual { margin: 0 !important; opacity: 1 !important; color: var(--papel); }
+  .cabeca h1 { color: var(--papel); font-size: clamp(2.1rem, 4.6vw, 3.6rem); max-width: 20ch; margin-bottom: 0.4em; }
+  .cabeca h1 :global(em) { color: var(--ouro); font-style: normal; }
+  .cabeca .lead { color: var(--mudo-escuro); max-width: 40rem; margin: 0; }
+</style>

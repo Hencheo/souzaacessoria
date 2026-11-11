@@ -1,0 +1,64 @@
+---
+import { getCollection } from 'astro:content';
+import Cabeca from '../../components/Cabeca.astro';
+import Base from '../../layouts/Base.astro';
+import { AREAS } from '../../site.config';
+
+const posts = (await getCollection('blog', ({ data }) => !data.rascunho)).sort(
+  (a, b) => b.data.data.valueOf() - a.data.data.valueOf(),
+);
+const fmt = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'long', year: 'numeric', timeZone: 'UTC' });
+---
+
+<Base titulo="Artigos" descricao="Artigos sobre Direito Previdenciário e Direito Civil explicados em linguagem simples.">
+  <Cabeca
+    rotulo="Artigos"
+    titulo="Seus direitos, explicados com <em>clareza</em>"
+    resumo="Conteúdo informativo sobre benefícios do INSS, contratos, consumo, indenizações e sucessões."
+    trilha={[{ label: 'Artigos' }]}
+  />
+
+  <section class="secao">
+    <div class="container">
+      {posts.length === 0 ? (
+        <div class="vazio">
+          <p class="vazio__titulo">Os primeiros artigos serão publicados em breve.</p>
+          <p>Enquanto isso, veja as áreas de atuação:</p>
+          <div class="vazio__links">
+            <a class="seta" href="/previdenciario/">Direito Previdenciário</a>
+            <a class="seta" href="/civel/">Direito Civil</a>
+          </div>
+        </div>
+      ) : (
+        <div class="lista">
+          {posts.map((p) => (
+            <a class="item" href={`/blog/${p.id}/`}>
+              <p class="meta">{AREAS[p.data.area].titulo} · <time datetime={p.data.data.toISOString()}>{fmt.format(p.data.data)}</time></p>
+              <h2>{p.data.titulo}</h2>
+              <p class="item__d">{p.data.descricao}</p>
+              <span class="seta">Ler artigo</span>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .lista { border-top: 1px solid var(--tinta); }
+  .item { display: grid; gap: 0.5rem; text-decoration: none; color: inherit; padding: 2rem 0; border-bottom: 1px solid var(--linha); }
+  @media (min-width: 900px) {
+    .item { grid-template-columns: 14rem 1fr auto; column-gap: 3rem; align-items: baseline; }
+    .item__d { grid-column: 2; }
+    .item .seta { grid-column: 3; grid-row: 1; }
+  }
+  .item h2 { font-size: clamp(1.4rem, 2.4vw, 1.9rem); margin: 0; transition: color 0.3s; }
+  .item:hover h2 { color: var(--ouro-texto); }
+  .item__d { color: var(--mudo); margin: 0; max-width: 40rem; }
+  .meta { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--ouro-texto); margin: 0; }
+  .vazio { border-top: 1px solid var(--tinta); padding-top: 2rem; max-width: 40rem; }
+  .vazio__titulo { font-family: var(--serif); font-size: 1.6rem; color: var(--tinta); }
+  .vazio p:not(.vazio__titulo) { color: var(--mudo); }
+  .vazio__links { display: flex; flex-wrap: wrap; gap: 1rem 2.5rem; margin-top: 1rem; }
+</style>

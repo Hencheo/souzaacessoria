@@ -1,0 +1,92 @@
+# Configuração do Pages CMS (https://pagescms.org)
+# A advogada entra em app.pagescms.org com a conta do GitHub e edita por aqui.
+
+media:
+  input: public/images
+  output: /images
+
+content:
+  - name: blog
+    label: Artigos do blog
+    type: collection
+    path: src/content/blog
+    filename: "{fields.titulo}.md"
+    view:
+      fields: [titulo, data, area, rascunho]
+      primary: titulo
+      sort: [data]
+      default:
+        sort: data
+        order: desc
+    fields:
+      - name: titulo
+        label: Título
+        type: string
+        required: true
+      - name: descricao
+        label: Resumo (aparece no Google, até 170 caracteres)
+        type: text
+        required: true
+        pattern:
+          regex: "^.{1,170}$"
+          message: "Use no máximo 170 caracteres."
+      - name: data
+        label: Data de publicação
+        type: date
+        required: true
+      - name: atualizado
+        label: Data de atualização (opcional)
+        type: date
+      - name: area
+        label: Área
+        type: select
+        required: true
+        options:
+          values:
+            - { value: previdenciario, label: Previdenciário }
+            - { value: civel, label: Cível }
+      - name: rascunho
+        label: Rascunho (não publicar ainda)
+        type: boolean
+        default: false
+      - name: body
+        label: Texto
+        type: rich-text
+
+  - name: areas
+    label: Páginas de serviço
+    type: collection
+    path: src/content/areas
+    view:
+      fields: [titulo, area, ordem]
+      primary: titulo
+    fields:
+      - name: titulo
+        label: Título
+        type: string
+        required: true
+      - name: area
+        label: Área
+        type: select
+        required: true
+        options:
+          values:
+            - { value: previdenciario, label: Previdenciário }
+            - { value: civel, label: Cível }
+      - name: resumo
+        label: Resumo (até 190 caracteres)
+        type: text
+        required: true
+      - name: ordem
+        label: Ordem na lista
+        type: number
+      - name: faq
+        label: Perguntas frequentes
+        type: object
+        list: true
+        fields:
+          - { name: pergunta, label: Pergunta, type: string }
+          - { name: resposta, label: Resposta, type: text }
+      - name: body
+        label: Texto
+        type: rich-text

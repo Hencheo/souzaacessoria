@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import Cabeca from '../components/Cabeca.astro';
+import { SITE } from '../site.config';
+---
+
+<Base titulo="Aviso legal" descricao="Informações sobre o caráter informativo do conteúdo deste site.">
+  <Cabeca rotulo="Informações legais" titulo="Aviso legal" resumo="Sobre o caráter informativo do conteúdo deste site." trilha={[{ label: 'Aviso legal' }]} />
+
+  <section class="secao">
+    <div class="container prosa">
+      <p>
+        Este site pertence a {SITE.escritorio}, sob responsabilidade de {SITE.advogada},
+        inscrita na {SITE.oab}.
+      </p>
+      <p>
+        O conteúdo publicado tem caráter exclusivamente informativo e educativo, em
+        conformidade com o Código de Ética e Disciplina da OAB e com o Provimento nº 205/2021
+        do Conselho Federal da OAB. Ele não constitui consulta, parecer ou orientação jurídica
+        para casos específicos.
+      </p>
+      <p>
+        A legislação e o entendimento dos tribunais mudam com frequência. Antes de tomar
+        qualquer decisão, procure um advogado de sua confiança para analisar a sua situação.
+      </p>
+      <p>
+        O acesso a este site ou o envio de mensagens não estabelece, por si só, relação entre
+        advogado e cliente.
+      </p>
+    </div>
+  </section>
+</Base>

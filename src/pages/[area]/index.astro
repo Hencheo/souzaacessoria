@@ -1,0 +1,67 @@
+---
+import { getCollection } from 'astro:content';
+import Cabeca from '../../components/Cabeca.astro';
+import Indice from '../../components/Indice.astro';
+import Base from '../../layouts/Base.astro';
+import Chamada from '../../components/Chamada.astro';
+import { AREAS, SITE, type AreaKey } from '../../site.config';
+
+export function getStaticPaths() {
+  return (Object.keys(AREAS) as AreaKey[]).map((area) => ({ params: { area } }));
+}
+
+const area = Astro.params.area as AreaKey;
+const info = AREAS[area];
+const itens = (await getCollection('areas', ({ data }) => data.area === area)).sort(
+  (a, b) => a.data.ordem - b.data.ordem,
+);
+const posts = (await getCollection('blog', ({ data }) => data.area === area && !data.rascunho))
+  .sort((a, b) => b.data.data.valueOf() - a.data.data.valueOf())
+  .slice(0, 4);
+
+const migalhas = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Início', item: SITE.url + '/' },
+    { '@type': 'ListItem', position: 2, name: info.titulo, item: SITE.url + info.rota },
+  ],
+};
+---
+
+<Base titulo={`${info.titulo} em Maringá`} descricao={info.resumo} jsonld={[migalhas]}>
+  <Cabeca rotulo="Área de atuação" titulo={info.titulo} resumo={info.resumo} trilha={[{ label: info.titulo }]} />
+
+  <section class="secao">
+    <div class="container duas">
+      <div class="duas__cab">
+        <p class="rotulo">Situações atendidas</p>
+        <h2>Em que posso <em>ajudar</em>?</h2>
+        <p class="lead">Cada página explica quem tem direito, como funciona e quais documentos reunir.</p>
+      </div>
+      <Indice itens={itens.map((i) => ({ t: i.data.titulo, d: i.data.resumo, href: `${info.rota}${i.id}/` }))} />
+    </div>
+  </section>
+
+  {posts.length > 0 && (
+    <section class="secao secao--marfim">
+      <div class="container duas">
+        <div class="duas__cab">
+          <p class="rotulo">Artigos</p>
+          <h2>Leituras sobre {info.titulo.replace('Direito ', '')}</h2>
+        </div>
+        <Indice itens={posts.map((p) => ({ t: p.data.titulo, d: p.data.descricao, href: `/blog/${p.id}/` }))} />
+      </div>
+    </section>
+  )}
+
+  <Chamada />
+</Base>
+
+<style>
+  .duas { display: grid; gap: 2.5rem; }
+  @media (min-width: 980px) {
+    .duas { grid-template-columns: 0.85fr 1.6fr; gap: 5rem; }
+    .duas__cab { position: sticky; top: 7rem; align-self: start; }
+  }
+</style>

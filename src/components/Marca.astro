@@ -1,0 +1,26 @@
+---
+import { Image } from 'astro:assets';
+import { SITE } from '../site.config';
+import monograma from '../assets/monograma.png';
+interface Props { tamanho?: 'normal' | 'grande' }
+const { tamanho = 'normal' } = Astro.props;
+---
+
+<a class:list={['marca', `marca--${tamanho}`]} href="/" aria-label={`${SITE.escritorio}, página inicial`}>
+  <Image class="marca__mono" src={monograma} alt="" width={112} loading="eager" />
+  <span class="marca__txt">
+    <span class="marca__nome">Souza</span>
+    <span class="marca__sub">Advocacia e Consultoria</span>
+  </span>
+</a>
+
+<style>
+  .marca { display: inline-flex; align-items: center; gap: 0.8rem; text-decoration: none; color: var(--papel); }
+  .marca:hover { color: var(--papel); }
+  .marca :global(.marca__mono) { width: 3.1rem; height: auto; flex: none; }
+  .marca__txt { display: flex; flex-direction: column; line-height: 1; padding-left: 0.8rem; border-left: 1px solid var(--linha-escura); }
+  .marca__nome { font-family: var(--serif); font-size: 1.6rem; letter-spacing: 0.01em; }
+  .marca__sub { font-size: 0.6rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--mudo-escuro); margin-top: 0.3rem; }
+  .marca--grande :global(.marca__mono) { width: 4rem; }
+  .marca--grande .marca__nome { font-size: 2.1rem; }
+</style>

@@ -1,0 +1,71 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import Cabeca from '../../components/Cabeca.astro';
+import Base from '../../layouts/Base.astro';
+import Chamada from '../../components/Chamada.astro';
+import { AREAS, SITE } from '../../site.config';
+import foto from '../../assets/advogada-avatar.jpg';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.rascunho);
+  return posts.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const area = AREAS[entry.data.area];
+const url = `${SITE.url}/blog/${entry.id}/`;
+const fmt = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'long', year: 'numeric', timeZone: 'UTC' });
+
+const artigo = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: entry.data.titulo,
+  description: entry.data.descricao,
+  datePublished: entry.data.data.toISOString(),
+  dateModified: (entry.data.atualizado ?? entry.data.data).toISOString(),
+  mainEntityOfPage: url,
+  inLanguage: 'pt-BR',
+  author: { '@id': `${SITE.url}/#advogada` },
+  publisher: { '@id': `${SITE.url}/#escritorio` },
+};
+---
+
+<Base titulo={entry.data.titulo} descricao={entry.data.descricao} jsonld={[artigo]}>
+  <Cabeca rotulo={area.titulo} titulo={entry.data.titulo} resumo={entry.data.descricao} trilha={[{ label: 'Artigos', href: '/blog/' }]}>
+    <p class="data">
+      Publicado em <time datetime={entry.data.data.toISOString()}>{fmt.format(entry.data.data)}</time>
+      {entry.data.atualizado && <> · atualizado em {fmt.format(entry.data.atualizado)}</>}
+    </p>
+  </Cabeca>
+
+  <article class="secao">
+    <div class="container">
+      <div class="prosa">
+        <Content />
+
+        <aside class="autora">
+          <Image src={foto} alt="" width={128} height={128} />
+          <div>
+            <p class="autora__nome">{SITE.advogada}</p>
+            <p>Advogada ({SITE.oab}) atuante em Direito Previdenciário e Direito Civil em Maringá e região. <a href="/sobre/">Saiba mais</a>.</p>
+          </div>
+        </aside>
+
+        <p class="aviso">
+          Artigo de caráter informativo. Não substitui a análise individual do caso por um advogado.
+        </p>
+      </div>
+    </div>
+  </article>
+  <Chamada />
+</Base>
+
+<style>
+  .data { font-size: 0.8rem; letter-spacing: 0.06em; color: var(--mudo-escuro); margin: 1.6rem 0 0; }
+  .autora { display: flex; gap: 1.2rem; align-items: center; margin-top: 3.5rem; padding: 1.5rem 0; border-top: 1px solid var(--tinta); border-bottom: 1px solid var(--linha); }
+  .autora :global(img) { border-radius: 50%; object-fit: cover; flex: none; width: 64px; height: 64px; }
+  .autora p { margin: 0; font-size: 0.93rem; color: var(--mudo); }
+  .autora__nome { font-family: var(--serif); font-size: 1.15rem !important; color: var(--tinta) !important; margin-bottom: 0.2rem !important; }
+</style>

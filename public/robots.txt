@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# TODO: atualizar com o domínio definitivo
+Sitemap: https://www.exemplo.adv.br/sitemap-index.xml

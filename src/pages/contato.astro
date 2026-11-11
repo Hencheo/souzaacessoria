@@ -1,0 +1,72 @@
+---
+import Cabeca from '../components/Cabeca.astro';
+import Base from '../layouts/Base.astro';
+import WhatsIcon from '../components/WhatsIcon.astro';
+import { SITE } from '../site.config';
+---
+
+<Base titulo="Contato e agendamento" descricao={`Agende um atendimento com ${SITE.advogada} em Maringá e região. WhatsApp ${SITE.telefone}.`}>
+  <Cabeca
+    rotulo="Contato"
+    titulo="Agende seu <em>atendimento</em>"
+    resumo="O atendimento é feito com hora marcada. Envie uma mensagem contando brevemente o assunto e combinamos o melhor dia, horário e formato."
+    trilha={[{ label: 'Contato' }]}
+  >
+    <div class="cab-acoes">
+      <a class="botao botao--ouro" href={SITE.whatsapp} target="_blank" rel="noopener"><WhatsIcon /> {SITE.telefone}</a>
+      <a class="seta" href={`tel:${SITE.telefoneE164}`}>Ligar agora</a>
+    </div>
+  </Cabeca>
+
+  <section class="secao">
+    <div class="container">
+      <div class="canais">
+        <div>
+          <p class="rotulo">WhatsApp</p>
+          <p class="canais__valor"><a href={SITE.whatsapp} target="_blank" rel="noopener">{SITE.telefone}</a></p>
+          <p>A forma mais rápida de agendar.</p>
+        </div>
+        <div>
+          <p class="rotulo">Horário</p>
+          <p class="canais__valor">Segunda a sexta</p>
+          <p>Das 9h às 18h, com hora marcada.</p>
+        </div>
+        <div>
+          <p class="rotulo">Onde atendo</p>
+          <p class="canais__valor">Maringá e região</p>
+          <p>Sala de reunião, videochamada ou no local de sua preferência em {SITE.regiao.join(', ')}.</p>
+        </div>
+      </div>
+
+      <div class="docs">
+        <div>
+          <p class="rotulo">Primeira conversa</p>
+          <h2>O que <em>levar</em></h2>
+        </div>
+        <ol class="docs__lista">
+          <li><span>01</span><p>Documento de identidade com foto e CPF.</p></li>
+          <li><span>02</span><p>Para assuntos do INSS: carteira de trabalho, extrato do CNIS (disponível no Meu INSS), cartas de indeferimento e laudos médicos, se houver.</p></li>
+          <li><span>03</span><p>Para assuntos cíveis: contratos, notas, comprovantes, mensagens e qualquer documento relacionado ao caso.</p></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .cab-acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 1.2rem 1.8rem; margin-top: 2.2rem; }
+  .cab-acoes .seta { color: var(--papel); }
+  .canais { display: grid; gap: 2.5rem; }
+  @media (min-width: 860px) { .canais { grid-template-columns: repeat(3, 1fr); gap: 3.5rem; } }
+  .canais > div { border-top: 1px solid var(--tinta); padding-top: 1.5rem; }
+  .canais .rotulo { margin-bottom: 0.9rem; }
+  .canais__valor { font-family: var(--serif); font-size: 1.6rem; line-height: 1.2; color: var(--tinta); margin-bottom: 0.5rem; }
+  .canais__valor a { text-decoration: none; }
+  .canais p:last-child { color: var(--mudo); margin: 0; }
+  .docs { display: grid; gap: 2rem; margin-top: clamp(4rem, 9vw, 7rem); }
+  @media (min-width: 980px) { .docs { grid-template-columns: 0.85fr 1.6fr; gap: 5rem; } }
+  .docs__lista { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--tinta); }
+  .docs__lista li { display: grid; grid-template-columns: 2.6rem 1fr; gap: 1rem; padding: 1.3rem 0; border-bottom: 1px solid var(--linha); }
+  .docs__lista span { font-family: var(--serif); color: var(--ouro-texto); padding-top: 0.15rem; }
+  .docs__lista p { margin: 0; color: var(--texto); }
+</style>
