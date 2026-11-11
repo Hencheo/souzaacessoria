@@ -2,7 +2,7 @@
 // TODO: preencher NOME_COMPLETO, URL definitiva e redes sociais antes de publicar.
 
 export const SITE = {
-  url: 'https://www.exemplo.adv.br', // TODO: trocar pelo domínio definitivo
+  url: 'https://vitoriasouza.adv.br',
   escritorio: 'Souza Advocacia e Consultoria',
   advogada: 'Dra. Vitoria Rabelo de Souza',
   oab: 'OAB/PA 25.287',
