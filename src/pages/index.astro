@@ -5,8 +5,8 @@ import Base from '../layouts/Base.astro';
 import Chamada from '../components/Chamada.astro';
 import WhatsIcon from '../components/WhatsIcon.astro';
 import { SITE } from '../site.config';
-import foto from '../assets/advogada.jpg';
-import fotoTrabalho from '../assets/advogada-trabalho.jpg';
+import foto from '../assets/advogada-retrato.jpg';
+import fotoTrabalho from '../assets/advogada-escritorio.jpg';
 
 const posts = (await getCollection('blog', ({ data }) => !data.rascunho))
   .sort((a, b) => b.data.data.valueOf() - a.data.data.valueOf())
@@ -285,7 +285,7 @@ let n = 0;
       -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
       mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
     }
-    .abertura__esq { position: relative; z-index: 1; margin-top: -7.5rem; }
+    .abertura__esq { position: relative; z-index: 1; margin-top: -11.5rem; }
     .abertura h1 { font-size: clamp(2rem, 8.6vw, 2.6rem); text-shadow: 0 2px 24px rgba(21, 21, 23, 0.8); }
     .abertura__acoes { margin-top: 1.6rem; gap: 1.2rem 1.6rem; }
     .abertura__dir { margin: 3rem 0 2.2rem; padding-top: 2rem; border-top: 1px solid var(--linha-escura); }

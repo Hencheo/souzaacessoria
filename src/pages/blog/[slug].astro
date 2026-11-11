@@ -5,7 +5,7 @@ import Cabeca from '../../components/Cabeca.astro';
 import Base from '../../layouts/Base.astro';
 import Chamada from '../../components/Chamada.astro';
 import { AREAS, SITE } from '../../site.config';
-import foto from '../../assets/advogada-avatar.jpg';
+import foto from '../../assets/advogada-rosto.jpg';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.rascunho);
